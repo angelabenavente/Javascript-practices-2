@@ -13,8 +13,7 @@ const dd = today.getDate();
 const mm =today.getMonth()+1;
 const yyyy = today.getFullYear();
 
-
-//Get birthday date
+//Get birthday date & diff
 document.getElementById("birthDate").addEventListener("change", function() {
   const birth = new Date(ageInputNode.value);
   const timeLived= today.getTime()-birth.getTime();
@@ -26,6 +25,4 @@ document.getElementById("birthDate").addEventListener("change", function() {
 
   const timeLivedNode = document.querySelector('.timeLived');
   timeLivedNode.innerHTML = `I am ${seconsLived} seconds, ${minutesLived} minutes, ${hoursLived} hours and ${daysLived} old.`;
-  
-
 });
