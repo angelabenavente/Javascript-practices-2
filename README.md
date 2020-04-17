@@ -1,1 +1,0 @@
-# Javascript-practices-2
