@@ -1,19 +1,39 @@
 'use strict';
 
+// Functions:
+// (Done) ---- number of characters
+// number of characters without spaces
+// (Done) ---- number of vocals
+// (Done) ---- number of words
+// words frequency
+// number of differents word (frequency)
+// number of repeated words (mark them, optional)
+// number of sentences
+
+const vocalsRegExp = new RegExp(/[aeiouáéíóúàèìòùäëïöü]/gi);
+const textAnalyzedCharactersNode = document.querySelector('.textAnalyzeCharacters');
 const textarea = document.querySelector('.textarea');
 
-document.querySelector('.textarea').addEventListener("keyup", function() {
-  let text = textarea.value;
-  let characters = text.length;
+const startSpace = /^ /;
+const endSpace = / $/;
+const someSpaces = /[ ]+/g;
 
-  const textAnalyzedCharactersNode = document.querySelector('.textAnalyzeCharacters');
-  textAnalyzedCharactersNode.innerHTML = `The text has ${characters} charaters`;
-});
+textarea.addEventListener('keyup', function(event) {
+  let text = event.target.value;
+  const characters = text.length;
+  const vocals = (text.match(vocalsRegExp) || []).length;
+  let wordsNumber = 0;
 
-document.querySelector('.textarea').addEventListener("keyup", function() {
-  let text = textarea.value;
-  let vocals = text.match(/[aeiouáéíóúàèìòùäëïöü]/gi).length ? text.match(/[aeiouáéíóúàèìòùäëïöü]/gi).length : 0;
+  if (text == " ") {
+    wordsNumber = 0;
+  } else {
+    text = text.replace (someSpaces," ");
+    text = text.replace (startSpace,"");
+    text = text.replace (endSpace,"");
+    const singleWords = text.split (" ");
+    wordsNumber = singleWords.length;
+  }
 
-  const textAnalyzedVocalsNode = document.querySelector('.textAnalyzeVocals');
-  textAnalyzedVocalsNode.innerHTML = `The text has ${vocals} vocals`;
+  textAnalyzedCharactersNode.innerHTML = `The text has ${characters} charaters, ${vocals} vocals and ${wordsNumber} words.`;
+
 });
