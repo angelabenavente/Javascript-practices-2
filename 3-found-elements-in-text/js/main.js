@@ -2,7 +2,8 @@
 
 // Functions:
 // (Done) ---- number of characters
-// number of characters without spaces
+// (Done) ---- number of characters without spaces
+// number of characters without articles and prepositions (for translation jobs)
 // (Done) ---- number of vocals
 // (Done) ---- number of words
 // words frequency
@@ -23,6 +24,7 @@ textarea.addEventListener('keyup', function(event) {
   const characters = text.length;
   const vocals = (text.match(vocalsRegExp) || []).length;
   let wordsNumber = 0;
+  let charactersWithoutSpaces = 0;
 
   if (text == " ") {
     wordsNumber = 0;
@@ -32,8 +34,11 @@ textarea.addEventListener('keyup', function(event) {
     text = text.replace (endSpace,"");
     const singleWords = text.split (" ");
     wordsNumber = singleWords.length;
+    charactersWithoutSpaces = singleWords.join('').length;
   }
 
-  textAnalyzedCharactersNode.innerHTML = `The text has ${characters} charaters, ${vocals} vocals and ${wordsNumber} words.`;
+  
+
+  textAnalyzedCharactersNode.innerHTML = `The text has ${characters} charaters, ${charactersWithoutSpaces} without spaces, ${vocals} vocals and ${wordsNumber} words.`;
 
 });
