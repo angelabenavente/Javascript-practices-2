@@ -13,7 +13,7 @@
 // number of characters without articles and prepositions(for translation jobs)
 // number of keywords
 // number of stopword 
-// number of sentences
+// (Done) ---- number of sentences
 // avergage of words by sentence
 // average of sentences by paragraph
 
@@ -37,7 +37,7 @@ const someSpaces = /[ ]+/g;
 textarea.addEventListener('keyup', function(event) {
   let text = event.target.value;
 
-  textAnalyzedCharactersNode.innerHTML = `The text has ${calculateCharacters(text)} charaters, ${calculateCharactersWithoutSpaces(text)} without spaces and ${calculateVocals(text)} vocals and ${calculateSpecialCharacters(text)} special characters and ${calculateWords(text).length} words and ${calculateParagraphs(text)} paragraphs, there are ${countRepeatedWords(calculateWords(text)).length} words repeated: ${countRepeatedWords(calculateWords(text))} `;
+  textAnalyzedCharactersNode.innerHTML = `The text has ${calculateCharacters(text)} charaters, ${calculateCharactersWithoutSpaces(text)} without spaces and ${calculateVocals(text)} vocals and ${calculateSpecialCharacters(text)} special characters and ${calculateWords(text).length} words and ${calculateParagraphs(text)} paragraphs, there are ${countRepeatedWords(calculateWords(text)).length} words repeated: ${countRepeatedWords(calculateWords(text))}. Number of sentences: ${countSentences(text)} `;
 
 });
 
@@ -120,6 +120,11 @@ return repeatedWords;
 }
   
 //Count repeated words
-function countRepeatedWords(singleWords){
-
+function countSentences(text){
+  const sentencesRegExp = new RegExp(/[\w|\)][.,?!](\s|$\*;:{}=\-_`~()”“"…)/g);
+  let sentences = 0;
+  if(text) {
+    sentences = (text.match(sentencesRegExp)|| []).length;
+  }
+  return sentences;
 }
