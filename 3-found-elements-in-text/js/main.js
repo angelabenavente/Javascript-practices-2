@@ -3,18 +3,18 @@
 // Functions:
 // (Done) ---- number of characters
 // (Done) ---- number of characters without spaces
-// number of characters without articles and prepositions(for translation jobs)
 // (Done) ---- number of points, special characters, etc
 // (Done) ---- number of vocals
-// (Doing) ---- number of words
-// words frequency
-// number of differents word (frequency)
+// (Done) ---- number of words
+// (Done) ---- numbers of paragraphs
+// (Done) ---- words frequency
 // number of repeated words (mark them, optional)
+// number of differents word (frequency)
+// number of characters without articles and prepositions(for translation jobs)
 // number of keywords
 // number of stopword 
 // number of sentences
 // avergage of words by sentence
-// (Doing) ---- numbers of paragraphs
 // average of sentences by paragraph
 
 // Morphosyntactic marker
@@ -37,7 +37,7 @@ const someSpaces = /[ ]+/g;
 textarea.addEventListener('keyup', function(event) {
   let text = event.target.value;
 
-  textAnalyzedCharactersNode.innerHTML = `The text has ${calculateCharacters(text)} charaters, ${calculateCharactersWithoutSpaces(text)} without spaces and ${calculateVocals(text)} vocals and ${calculateSpecialCharacters(text)} special characters and ${calculateWords(text)} words and ${calculateParagraphs(text)} paragraphs.`;
+  textAnalyzedCharactersNode.innerHTML = `The text has ${calculateCharacters(text)} charaters, ${calculateCharactersWithoutSpaces(text)} without spaces and ${calculateVocals(text)} vocals and ${calculateSpecialCharacters(text)} special characters and ${calculateWords(text).length} words and ${calculateParagraphs(text)} paragraphs, there are ${countRepeatedWords(calculateWords(text)).length} words repeated: ${countRepeatedWords(calculateWords(text))} `;
 
 });
 
@@ -76,29 +76,50 @@ function calculateSpecialCharacters(text) {
 
 //Words number
 function calculateWords(text) {
-  let wordsNumber = 0;
-  if(text !== " " && text) {
-    text = text.trim();
+  text = text.trim();
+  let singleWords
+  // let wordsNumber = 0;
+  if(text) {
     text = text.replace (lineBreaksAndTabs," ");
     text = text.replace (someSpaces," ");
     text = text.replace (startSpace,"");
     text = text.replace (endSpace,"");
-    const singleWords = text.split (" ");
-    wordsNumber = singleWords.length;
+    singleWords = text.split (" ");
+    // wordsNumber = singleWords.length;
   }
 
-  return wordsNumber;
+  return singleWords;
 }
 
 //Paragraphs number
 function calculateParagraphs(text) {
+  text = text.trim();
   const lineBreakRegExp = new RegExp(/[a-z0-9¿!\-\*](\r\n|\n|\r)+/gi);
   // const lineBreakRegExp = new RegExp(/[\n+/g,'\n/']/gi);
   let paragraphsNumber = 0;
 
-  if(text != " ") {
-    paragraphsNumber = (text.match(lineBreakRegExp) || []).length;
+  if(text) {
+    paragraphsNumber = (text.match(lineBreakRegExp) || []).length+1;
   }
 
   return paragraphsNumber;
+}
+
+//Show repeated words
+function countRepeatedWords(singleWords){
+  let repeatedWords = [];
+
+  singleWords.forEach((value,index)=>{
+    singleWords.splice(index,1); 
+    if(singleWords.indexOf(value)!=-1 && repeatedWords.indexOf(value)==-1) {
+      repeatedWords.push(value);
+    }     
+  });
+  
+return repeatedWords;
+}
+  
+//Count repeated words
+function countRepeatedWords(singleWords){
+
 }
