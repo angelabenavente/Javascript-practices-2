@@ -23,7 +23,7 @@
 // Easy reading
 //Brysbaert ofrece una tabla con con resultados de velocidad de lectura en español. En ella encuentra seis estudios que miden la lectura silenciosa y que indican una velocidad de 278 PPM y otros seis estudios que miden la lectura en voz alta, con una velocidad media de 191 PPM.
 
-//Calcula tu velocidad lectora
+// Calcula tu velocidad lectora y donde está en la media
 
 // Text value
 
@@ -38,6 +38,7 @@ const someSpaces = /[ ]+/g;
 
 textarea.addEventListener('keyup', function(event) {
   let text = event.target.value;
+  calculateSentencesInParagraphs(text)
 
   textAnalyzedCharactersNode.innerHTML = `The text has ${calculateCharacters(text)} charaters, ${calculateCharactersWithoutSpaces(text)} without spaces and ${calculateVocals(text)} vocals and ${calculateSpecialCharacters(text)} special characters and ${calculateWords(text).length} words and ${calculateParagraphs(text)} paragraphs, there are ${countRepeatedWords(calculateWords(text)).length} words repeated: ${countRepeatedWords(calculateWords(text))}. Number of sentences: ${countSentences(text)}. The read time is ${countReadTime(calculateWords(text).length)} `;
 
@@ -107,6 +108,26 @@ function calculateParagraphs(text) {
   return paragraphsNumber;
 }
 
+//separate sentences 
+function separateSentences(text) {
+  text = text.trim();
+  let sentences = [];
+  const lineBreakRegExp = new RegExp(/[a-z0-9¿!\-\*](\r\n|\n|\r)+/gi);
+  text = text.split(lineBreakRegExp);
+
+  for (let i = 0; i<=text.length; i++) {
+    if (i % 2 == 0) {
+      sentences.push(text[i]);
+    }
+  }
+  return sentences;
+}
+
+//words number in sentences 
+function calculateWordsInSentences(text) {
+ 
+}
+
 //Show repeated words
 function countRepeatedWords(singleWords){
   let repeatedWords = [];
@@ -131,7 +152,6 @@ function countSentences(text){
   return sentences;
 }
 
-
 //Time of reading
 function countReadTime(wordsNumber){
   let readTime = 0;
@@ -143,6 +163,7 @@ function countReadTime(wordsNumber){
   return `${round(readTime, 0)} minutes y ${round(readTime, 1) % 60} seconds.`;
 }
 
+//Round time of reading
 function round(num, decimals = 1) {
   var sign = (num >= 0 ? 1 : -1);
   num = num * sign;
