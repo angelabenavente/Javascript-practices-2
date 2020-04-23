@@ -7,9 +7,8 @@
 // (Done) ---- number of vocals
 // (Done) ---- number of words
 // (Done) ---- numbers of paragraphs
-// (Done) ---- words frequency
-// number of repeated words (mark them, optional)
-// number of differents word (frequency)
+// (Done) ---- show words repeated
+// (Doing) ---- number of repeated words (mark them, optional)
 // number of characters without articles and prepositions(for translation jobs)
 // number of keywords
 // number of stopword 
@@ -20,8 +19,11 @@
 // Morphosyntactic marker
 // Conjugate verbs
 
-// Reading time
+// (Done) ---- Reading time
 // Easy reading
+//Brysbaert ofrece una tabla con con resultados de velocidad de lectura en español. En ella encuentra seis estudios que miden la lectura silenciosa y que indican una velocidad de 278 PPM y otros seis estudios que miden la lectura en voz alta, con una velocidad media de 191 PPM.
+
+//Calcula tu velocidad lectora
 
 // Text value
 
@@ -37,7 +39,7 @@ const someSpaces = /[ ]+/g;
 textarea.addEventListener('keyup', function(event) {
   let text = event.target.value;
 
-  textAnalyzedCharactersNode.innerHTML = `The text has ${calculateCharacters(text)} charaters, ${calculateCharactersWithoutSpaces(text)} without spaces and ${calculateVocals(text)} vocals and ${calculateSpecialCharacters(text)} special characters and ${calculateWords(text).length} words and ${calculateParagraphs(text)} paragraphs, there are ${countRepeatedWords(calculateWords(text)).length} words repeated: ${countRepeatedWords(calculateWords(text))}. Number of sentences: ${countSentences(text)} `;
+  textAnalyzedCharactersNode.innerHTML = `The text has ${calculateCharacters(text)} charaters, ${calculateCharactersWithoutSpaces(text)} without spaces and ${calculateVocals(text)} vocals and ${calculateSpecialCharacters(text)} special characters and ${calculateWords(text).length} words and ${calculateParagraphs(text)} paragraphs, there are ${countRepeatedWords(calculateWords(text)).length} words repeated: ${countRepeatedWords(calculateWords(text))}. Number of sentences: ${countSentences(text)}. The read time is ${countReadTime(calculateWords(text).length)} `;
 
 });
 
@@ -119,7 +121,7 @@ function countRepeatedWords(singleWords){
 return repeatedWords;
 }
   
-//Count repeated words
+//Count sentences
 function countSentences(text){
   const sentencesRegExp = new RegExp(/[\w|\)][.,?!](\s|$\*;:{}=\-_`~()”“"…)/g);
   let sentences = 0;
@@ -128,3 +130,29 @@ function countSentences(text){
   }
   return sentences;
 }
+
+
+//Time of reading
+function countReadTime(wordsNumber){
+  let readTime = 0;
+  if (wordsNumber >= 278) {
+    readTime = wordsNumber / 278;
+  } else {
+    readTime = "less than a minute";
+  }
+  return `${round(readTime, 0)} minutes y ${round(readTime, 1) % 60} seconds.`;
+}
+
+function round(num, decimals = 1) {
+  var sign = (num >= 0 ? 1 : -1);
+  num = num * sign;
+  if (decimals === 0) 
+      return sign * Math.round(num);
+
+  num = num.toString().split('e');
+  num = Math.round(+(num[0] + 'e' + (num[1] ? (+num[1] + decimals) : decimals)));
+
+  num = num.toString().split('e');
+  return (sign * (num[0] + 'e' + (num[1] ? (+num[1] - decimals) : -decimals))) * 60;
+}
+
