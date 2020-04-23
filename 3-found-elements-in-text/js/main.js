@@ -13,20 +13,18 @@
 // number of keywords
 // number of stopword 
 // (Done) ---- number of sentences
-// avergage of words by sentence
-// average of sentences by paragraph
+// (Done) ---- avergage of words by sentence (optinal: show min and max sentences)
+// (Doing) ---- average of sentences by paragraph (optinonal: show min and max paragraph)
 
-// Morphosyntactic marker
-// Conjugate verbs
+// Morphosyntactic marker (library)
+// Conjugate verbs (library)
 
 // (Done) ---- Reading time
+// Calculate your reading time and compare it with the average.
 // Easy reading
 //Brysbaert ofrece una tabla con con resultados de velocidad de lectura en español. En ella encuentra seis estudios que miden la lectura silenciosa y que indican una velocidad de 278 PPM y otros seis estudios que miden la lectura en voz alta, con una velocidad media de 191 PPM.
 
-// Calcula tu velocidad lectora y donde está en la media
-
 // Text value
-
 
 const textAnalyzedCharactersNode = document.querySelector('.textAnalyzeCharacters');
 const textarea = document.querySelector('.textarea');
@@ -38,9 +36,8 @@ const someSpaces = /[ ]+/g;
 
 textarea.addEventListener('keyup', function(event) {
   let text = event.target.value;
-  calculateSentencesInParagraphs(text)
 
-  textAnalyzedCharactersNode.innerHTML = `The text has ${calculateCharacters(text)} charaters, ${calculateCharactersWithoutSpaces(text)} without spaces and ${calculateVocals(text)} vocals and ${calculateSpecialCharacters(text)} special characters and ${calculateWords(text).length} words and ${calculateParagraphs(text)} paragraphs, there are ${countRepeatedWords(calculateWords(text)).length} words repeated: ${countRepeatedWords(calculateWords(text))}. Number of sentences: ${countSentences(text)}. The read time is ${countReadTime(calculateWords(text).length)} `;
+  textAnalyzedCharactersNode.innerHTML = `The text has ${calculateCharacters(text)} charaters, ${calculateCharactersWithoutSpaces(text)} without spaces and ${calculateVocals(text)} vocals and ${calculateSpecialCharacters(text)} special characters and ${calculateWords(text).length} words and ${calculateParagraphs(text)} paragraphs, there are ${countRepeatedWords(calculateWords(text)).length} words repeated: ${countRepeatedWords(calculateWords(text))}. Number of sentences: ${countSentences(text)}. The read time is ${countReadTime(calculateWords(text).length)}, the average of sentences by paragraph is ${calculateSentencesInParagraphAverage(countSentences(text), calculateParagraphs(text))} and the average of words b sentence is ${calculateWordsInSentencesAverage((calculateWords(text).length), countSentences(text)+1)}`;
 
 });
 
@@ -108,25 +105,15 @@ function calculateParagraphs(text) {
   return paragraphsNumber;
 }
 
-//separate sentences 
-function separateSentences(text) {
-  text = text.trim();
-  let sentences = [];
-  const lineBreakRegExp = new RegExp(/[a-z0-9¿!\-\*](\r\n|\n|\r)+/gi);
-  text = text.split(lineBreakRegExp);
-
-  for (let i = 0; i<=text.length; i++) {
-    if (i % 2 == 0) {
-      sentences.push(text[i]);
-    }
-  }
-  return sentences;
+//Average sentences in paragraph
+function calculateSentencesInParagraphAverage(sentencesNumber, paragraphsNumber) {
+ return sentencesNumber / paragraphsNumber;
 }
 
-//words number in sentences 
-function calculateWordsInSentences(text) {
- 
-}
+//Average words in sentences
+function calculateWordsInSentencesAverage(wordsNumber, sentencesNumber) {
+  return wordsNumber / sentencesNumber;
+ }
 
 //Show repeated words
 function countRepeatedWords(singleWords){
@@ -144,7 +131,8 @@ return repeatedWords;
   
 //Count sentences
 function countSentences(text){
-  const sentencesRegExp = new RegExp(/[\w|\)][.,?!](\s|$\*;:{}=\-_`~()”“"…)/g);
+  text = text.trim();
+  const sentencesRegExp = new RegExp(/[\w|\)][:.,?!](\s|$\*;:{}=\-_`~()”“"…)/g);
   let sentences = 0;
   if(text) {
     sentences = (text.match(sentencesRegExp)|| []).length;
@@ -177,3 +165,16 @@ function round(num, decimals = 1) {
   return (sign * (num[0] + 'e' + (num[1] ? (+num[1] - decimals) : -decimals))) * 60;
 }
 
+// function separateParagraph(text) {
+//   text = text.trim();
+//   let sentences = [];
+//   const lineBreakRegExp = new RegExp(/[a-z0-9¿!\-\*](\r\n|\n|\r)+/gi);
+//   text = text.split(lineBreakRegExp);
+
+//   for (let i = 0; i<=text.length; i++) {
+//     if (i % 2 == 0) {
+//       sentences.push(text[i]);
+//     }
+//   }
+//   console.log(sentences);
+// }
